@@ -1,8 +1,15 @@
 package das.project.employeemanager.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
+import jdk.jfr.DataAmount;
+
+
 import javax.persistence.*;
 import javax.swing.plaf.ActionMapUIResource;
 import java.io.Serializable;
+
 
 @Entity
 public class Employee implements Serializable {

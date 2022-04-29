@@ -1,8 +1,10 @@
-package das.project.employeemanager;
+package das.project.employeemanager.controllers;
 
 
 import das.project.employeemanager.model.Employee;
+import das.project.employeemanager.repo.EmployeeRepo;
 import das.project.employeemanager.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +15,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeResource {
+    @Autowired
     private final EmployeeService employeeService;
 
     public EmployeeResource(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
+
 
     //return list of ALL of this employee
     @GetMapping("/all")
