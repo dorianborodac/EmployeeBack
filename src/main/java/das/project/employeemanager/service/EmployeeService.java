@@ -23,6 +23,7 @@ public class EmployeeService {
     }
 
     //take employee, and create employee in database
+
     public Employee addEmployee(Employee employee) {
         employee.setEmployeeCode(UUID.randomUUID().toString());
         return employeeRepo.save(employee);
@@ -49,9 +50,9 @@ public class EmployeeService {
         employeeRepo.deleteEmployeeById(id);
     }
 
-    public List<Employee> gotAllEmplpoyee() {
-        List<Employee> employees = new ArrayList<>();
-        employeeRepo.findAll().forEach(employees::add);
-        return employees;
-    }
+//    public List<Employee> gotAllEmplpoyee() {
+//        List<Employee> employees = new ArrayList<>();
+//        employeeRepo.findAll().forEach(employees::add);
+//        return employees;
+//    }
 }
