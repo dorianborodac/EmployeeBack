@@ -11,10 +11,7 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class EmployeemanagerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EmployeemanagerApplication.class, args);
     }
-
-
 }

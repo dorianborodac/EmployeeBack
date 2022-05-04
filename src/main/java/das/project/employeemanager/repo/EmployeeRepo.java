@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeRepo extends JpaRepository<Employee, Long> {
-    void deleteEmployeeById(Long id);
+ //   void deleteEmployeeById(Long id);
+
+    @Override
+    void deleteById(Long aLong);
 
     Optional<Employee> findEmployeeById(Long id);
-
-//    List<Employee> gotAllEmployee ();
-
 }

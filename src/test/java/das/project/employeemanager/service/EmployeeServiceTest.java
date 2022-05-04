@@ -1,38 +1,32 @@
 package das.project.employeemanager.service;
 
+import das.project.employeemanager.dto.EmployeeDTO;
 import das.project.employeemanager.model.Employee;
 import das.project.employeemanager.repo.EmployeeRepo;
+import das.project.employeemanager.service.imp.EmployeeServiceImp;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.matcher.ElementMatcher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.reactive.function.BodyInserters;
-
+import static org.mockito.BDDMockito.given;
 
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,9 +40,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class EmployeeServiceTest {
 
-
     @Autowired
-    private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeServiceImp employeeService;
 
     @Autowired
     private EmployeeRepo employeeRepo;
@@ -63,79 +57,32 @@ class EmployeeServiceTest {
     @Mock
     private HttpServletRequest request;
 
-//    @MockBean
-//    private EmployeeRepo employeeRepo;
-//
-//    private Employee employee3;
-//    private Employee employee4;
-//
-//    private final List<Employee> employeeList = new ArrayList<>();
-
     @BeforeAll
     public void setUp() {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         serverURL = String.format("%s:%s", "localhost", port);
-
-//        employee3 = new Employee();
-//        employee3.setId(3L);
-//        employee3.setName("Pavel Borodac");
-//        employee3.setPhone("24-333-222");
-//        employee3.setEmail("pavel@gmail.com");
-//        employee3.setJobTitle("Java Junior");
-//        employee3.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
-//
-//        employee4 = new Employee();
-//        employee4.setId(4L);
-//        employee4.setName("Andrei Borodac");
-//        employee4.setPhone("23-333-622");
-//        employee4.setEmail("andrei@gmail.com");
-//        employee4.setJobTitle("Java Middle");
-//        employee4.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar6.png");
-//
-//
-//        employeeList.add(employee3);
-//        employeeList.add(employee4);
-
-//        Mockito.when(employeeRepo.findAll())
-//                .thenReturn(employeeList);
-//        Mockito.when(employeeRepo.save(employee3))
-//                .thenReturn(employee3);
-//        Mockito.when(employeeRepo.findEmployeeById(4L))
-//                .thenReturn();
     }
-
-
 
     @Test
     void addEmployee() {
 
-//        Employee savedEmployee = employeeService.addEmployee(employee3);
-//
-//        assertNotNull(savedEmployee);
-//        assertEquals(employee3.getName(), savedEmployee.getName());
-//        assertEquals(employee3.getEmail(), savedEmployee.getEmail());
-//        assertEquals(employee3.getPhone(), savedEmployee.getPhone());
-//        assertEquals(employee3.getJobTitle(), savedEmployee.getJobTitle());
-//        assertEquals(employee3.getImageUrl(), savedEmployee.getImageUrl());
-///////////////////////////////////////////////////////////////////////////////////
-
-        Employee employee = new Employee();
+        EmployeeDTO employee = new EmployeeDTO();
         employee.setName("Buna Ziua");
         employee.setEmail("dori@gmail.com");
         employee.setPhone("69-070-142");
         employee.setJobTitle("Java Senior");
         employee.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar3.png");
 
-        Employee savedEmployee = this.webTestClient
+        EmployeeDTO savedEmployee = this.webTestClient
                 .post()
-                .uri(serverURL + "/employee/add/")
+                .uri(serverURL + "/employee/")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(employee))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(savedEmployee);
@@ -158,131 +105,40 @@ class EmployeeServiceTest {
 
     }
 
-
     @Test
     void gotAllEmployees() {
-        //        List<Employee> foundEmployees = employeeService.findAllEmployees();
-//
-//        assertNotNull(foundEmployees);
-//        assertEquals(2, foundEmployees.size());
-        //////////////////////////////////////////////////////////////////////////////////
+//        List<EmployeeDTO> allEmployee = employeeRepo.findAll();
+//        assertThat(allEmployee.size()).isGreaterThanOrEqualTo(1);
+        EmployeeDTO employee3 = new EmployeeDTO();
+        employee3.setId(3L);
+        employee3.setName("Pavel Borodac");
+        employee3.setPhone("24-333-222");
+        employee3.setEmail("pavel@gmail.com");
+        employee3.setJobTitle("Java Junior");
+        employee3.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
+        EmployeeDTO employee1 = new EmployeeDTO();
+        employee1.setId(1L);
+        employee1.setName("Pavel Borodac");
+        employee1.setPhone("24-333-222");
+        employee1.setEmail("pavel@gmail.com");
+        employee1.setJobTitle("Java Junior");
+        employee1.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
 
-//        Employee employee3 = new Employee();
-//        employee3.setId(3L);
-//        employee3.setName("Pavel Borodac");
-//        employee3.setPhone("24-333-222");
-//        employee3.setEmail("pavel@gmail.com");
-//        employee3.setJobTitle("Java Junior");
-//        employee3.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
-//
-//        Employee employee4 = new Employee();
-//        employee4.setId(4L);
-//        employee4.setName("Andrei Borodac");
-//        employee4.setPhone("23-333-622");
-//        employee4.setEmail("andrei@gmail.com");
-//        employee4.setJobTitle("Java Middle");
-//        employee4.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar6.png");
-//
-//        List<Employee> employeeList = new ArrayList<>();
-//        employeeList.add(employee3);
-//        employeeList.add(employee4);
-
-        List<Employee> allEmployee = employeeRepo.findAll();
-        assertThat(allEmployee.size()).isGreaterThanOrEqualTo(1);
-
-//        Employee savedEmployee = this.webTestClient
-//                .post()
-//                .uri(serverURL + "/employee/add")
-//                .contentType(APPLICATION_JSON)
-//                .accept(APPLICATION_JSON)
-//                .body(BodyInserters.fromValue(employee3))
-//                .exchange()
-//                .expectStatus()
-//                .is2xxSuccessful()
-//                .expectBody(Employee.class)
-//                .returnResult()
-//                .getResponseBody();
-//        assertNotNull(savedEmployee);
-
-
-//        List<Employee> savedEmployees = new ArrayList<>();
-//        employeeList.forEach(employee -> {
-//            savedEmployees.add(webTestClient
-//                    .post()
-//                    .uri(serverURL + "/employee/add")
-//                    .contentType(APPLICATION_JSON)
-//                    .accept(APPLICATION_JSON)
-//                    .body(BodyInserters.fromValue(employee))
-//                    .exchange()
-//                    .expectStatus()
-//                    .is2xxSuccessful()
-//                    .expectBody(Employee.class)
-//                    .returnResult()
-//                    .getResponseBody());
-//        });
-//
-//
-////        List<Employee> gotEmployeesAll = new ArrayList<>();
-//
-//        List<Employee> gotEmployees = this.webTestClient
-//                .get()
-//                .uri(serverURL + "/employee/all")
-//                .exchange()
-//                .expectStatus()
-//                .is2xxSuccessful()
-//                .expectBodyList(Employee.class)
-//                .returnResult()
-//                .getResponseBody();
-//        assertNotNull(gotEmployees);
+//        given(employeeService.findAllEmployees()).willReturn(List.of(employee3, employee1));
+//        List<EmployeeDTO> allEmployeeList = employeeService.findAllEmployees();
+//        assertThat(allEmployeeList.size()).isGreaterThanOrEqualTo(1);
+//        assertThat(allEmployeeList).containsExactly(employee3,employee1);
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        employeeDTOList.add(employee3);
+        employeeDTOList.add(employee1);
 
 
 
-//        Employee getUni = this.webTestClient
-//                .get()
-//                .uri(serverURL + "/employee/all")
-//                .accept(APPLICATION_JSON)
-//                .exchange()
-//                .expectStatus()
-//                .is2xxSuccessful()
-//                .expectBody(Employee.class)
-//                .returnResult()
-//                .getResponseBody();
-//        assertNotNull(getUni);
-
-//        HttpStatus deleteUni = this.webTestClient
-//                .delete()
-//                .uri(serverURL + "/employee/delete/" + savedEmployees.getId())
-//                .accept(APPLICATION_JSON)
-//                .exchange()
-//                .expectStatus().is2xxSuccessful()
-//                .expectBody(HttpStatus.class)
-//                .returnResult()
-//                .getResponseBody();
-
-//        assertThat(employee3.getId().equals(getAll.getId()));
-//        assertThat(employee4.getId().equals(getAll.getId()));
-//        assertEquals(savedEmployee.getId(), getUni.getId());
-//        assertEquals(savedEmployee.getName(), getUni.getName());
-//        assertEquals(savedEmployee.getPhone(), getUni.getPhone());
-//        assertEquals(savedEmployee.getEmail(), getUni.getEmail());
-//        assertEquals(savedEmployee.getJobTitle(), getUni.getJobTitle());
-//        assertEquals(savedEmployee.getImageUrl(), getUni.getImageUrl());
-         // assertThat(getValidEmployee().size(), );
     }
 
     @Test
     void updateEmployee() {
-
-//        Employee savedEmployee = employeeService.addEmployee(employee3);
-//
-//        assertNotNull(savedEmployee);
-//        assertEquals(employee3.getName(), savedEmployee.getName());
-//        assertEquals(employee3.getEmail(), savedEmployee.getEmail());
-//        assertEquals(employee3.getPhone(), savedEmployee.getPhone());
-//        assertEquals(employee3.getJobTitle(), savedEmployee.getJobTitle());
-//        assertEquals(employee3.getImageUrl(), savedEmployee.getImageUrl());
-        /////////////////////////////////////////////////////////////////////////
-        Employee employee3 = new Employee();
+        EmployeeDTO employee3 = new EmployeeDTO();
         employee3.setId(3L);
         employee3.setName("Pavel Borodac");
         employee3.setPhone("24-333-222");
@@ -290,21 +146,21 @@ class EmployeeServiceTest {
         employee3.setJobTitle("Java Junior");
         employee3.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
 
-        Employee savedEmployee = this.webTestClient
+        EmployeeDTO savedEmployee = this.webTestClient
                 .post()
-                .uri(serverURL + "/employee/add")
+                .uri(serverURL + "/employee/")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(employee3))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(savedEmployee);
 
-        Employee employee3update = new Employee();
+        EmployeeDTO employee3update = new EmployeeDTO();
         employee3update.setId(savedEmployee.getId());
         employee3update.setName("Borodac Dorian");
         employee3update.setPhone("24-323-222");
@@ -312,28 +168,28 @@ class EmployeeServiceTest {
         employee3update.setJobTitle("Java Suunior");
         employee3update.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar3.png");
 
-        Employee updateEmployee = this.webTestClient
+        EmployeeDTO updateEmployee = this.webTestClient
                 .put()
-                .uri(serverURL + "/employee/update")
+                .uri(serverURL + "/employee/")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(employee3update))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(updateEmployee);
 
-        Employee getUni = this.webTestClient
+        EmployeeDTO getUni = this.webTestClient
                 .get()
                 .uri(serverURL + "/employee/find/" + updateEmployee.getId())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(getUni);
@@ -353,23 +209,11 @@ class EmployeeServiceTest {
         Assertions.assertEquals(employee3update.getEmail(), updateEmployee.getEmail());
         Assertions.assertEquals(employee3update.getJobTitle(), updateEmployee.getJobTitle());
         Assertions.assertEquals(employee3update.getImageUrl(), updateEmployee.getImageUrl());
-
     }
 
     @Test
     void findEmployeeById() {
-
-//        Employee found = employeeService.findEmployeeById(employee4.getId());
-//        assertNotNull(found);
-//
-//        Assertions.assertEquals(employee4.getId(), found.getId());
-//        Assertions.assertEquals(employee4.getName(), found.getName());
-//        Assertions.assertEquals(employee4.getPhone(), found.getPhone());
-//        Assertions.assertEquals(employee4.getEmail(), found.getEmail());
-//        Assertions.assertEquals(employee4.getJobTitle(), found.getJobTitle());
-//        Assertions.assertEquals(employee4.getImageUrl(), found.getImageUrl());
-        /////////////////////////////////////////////////////////////////////////
-        Employee employee1 = new Employee();
+        EmployeeDTO employee1 = new EmployeeDTO();
         employee1.setId(1L);
         employee1.setName("Pavel Borodac");
         employee1.setPhone("24-333-222");
@@ -377,28 +221,28 @@ class EmployeeServiceTest {
         employee1.setJobTitle("Java Junior");
         employee1.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
 
-        Employee savedEmployee = this.webTestClient
+        EmployeeDTO savedEmployee = this.webTestClient
                 .post()
-                .uri(serverURL + "/employee/add")
+                .uri(serverURL + "/employee/")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(employee1))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(savedEmployee);
 
-        Employee getUni = this.webTestClient
+        EmployeeDTO getUni = this.webTestClient
                 .get()
                 .uri(serverURL + "/employee/find/" + savedEmployee.getId())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(getUni);
@@ -419,33 +263,27 @@ class EmployeeServiceTest {
         Assertions.assertEquals(savedEmployee.getEmail(), getUni.getEmail());
         Assertions.assertEquals(savedEmployee.getJobTitle(), getUni.getJobTitle());
         Assertions.assertEquals(savedEmployee.getImageUrl(), getUni.getImageUrl());
-
     }
 
     @Test
     void deleteEmployee() {
-//        employeeService.deleteEmployee(employee3.getId());
-//
-//        Mockito.verify(employeeRepo, Mockito.times(1))
-//                .deleteEmployeeById(employee3.getId());
-        ///////////////////////////////////////////////////////
-        Employee employee3 = new Employee();
+        EmployeeDTO employee3 = new EmployeeDTO();
         employee3.setId(3L);
         employee3.setName("Pavel Borodac");
         employee3.setPhone("24-333-222");
         employee3.setEmail("pavel@gmail.com");
         employee3.setJobTitle("Java Junior");
         employee3.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
-        Employee savedEmployee = this.webTestClient
+        EmployeeDTO savedEmployee = this.webTestClient
                 .post()
-                .uri(serverURL + "/employee/add")
+                .uri(serverURL + "/employee/")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(employee3))
                 .exchange()
                 .expectStatus()
                 .is2xxSuccessful()
-                .expectBody(Employee.class)
+                .expectBody(EmployeeDTO.class)
                 .returnResult()
                 .getResponseBody();
         assertNotNull(savedEmployee);
@@ -460,6 +298,4 @@ class EmployeeServiceTest {
                 .returnResult()
                 .getResponseBody();
     }
-
-
 }

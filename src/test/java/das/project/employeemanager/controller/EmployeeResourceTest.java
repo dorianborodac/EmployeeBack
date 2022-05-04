@@ -1,25 +1,25 @@
 package das.project.employeemanager.controller;
 
-import static java.util.UUID.randomUUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import das.project.employeemanager.controllers.EmployeeResource;
 import das.project.employeemanager.model.Employee;
-import das.project.employeemanager.service.EmployeeService;
+import das.project.employeemanager.service.imp.EmployeeServiceImp;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 import org.junit.runner.RunWith;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = EmployeeResource.class)
@@ -27,59 +27,58 @@ class EmployeeResourceTest {
 
     @Autowired
     MockMvc mockMvc;
-    @Autowired
-    ObjectMapper mapper;
 
     @MockBean
-    private EmployeeService employeeService;
+    private EmployeeServiceImp employeeService;
 
-    Employee RECORD_1 = new Employee("Dorain Borodac",
-            "dori@gmail.com",
-            "Java Senior",
-            "22-333-444",
-            "https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png",
-            randomUUID().toString());
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    Employee RECORD_2 = new Employee("Ion Borodac",
-            "ion@gmail.com",
-            "Java MIddle",
-            "22-333-666",
-            "https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png",
-            randomUUID().toString());
+    private Employee employee1;
+    private Employee employee2;
 
 
-    Employee RECORD_3 = new Employee("Andrei Borodac",
-            "andrei@gmail.com",
-            "Java Junior",
-            "22-333-555",
-            "https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png",
-            randomUUID().toString());
+    private final Long employee1EmployeeNumber = 23L;
+    private final Long employee2EmployeeNumber = 91L;
 
+    @Before
+    public void setup() {
+        employee1 = new Employee();
+        employee1.setId(1L);
+        employee1.setName("Dorian Borodac");
+        employee1.setEmail("dori@gmail.com");
+        employee1.setPhone("69-070-142");
+        employee1.setJobTitle("Java Senior");
+        employee1.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar3.png");
 
-    @Test
-    void getAllEmployees() throws Exception {
-        List<Employee> employees = new ArrayList<>(Arrays.asList(RECORD_1, RECORD_2, RECORD_3));
+        employee2 = new Employee();
+        employee2.setId(2L);
+        employee2.setName("Andrei Borodac");
+        employee2.setEmail("andrei@gmail.com");
+        employee2.setPhone("69-070-000");
+        employee2.setJobTitle("Java Sunior");
+        employee2.setImageUrl("https://www.bootdey.com/app/webroot/img/Content/avatar/avatar1.png");
 
-        Mockito.when(employeeService.findAllEmployees())
-                .thenReturn(employees);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/employee/all")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[2].email", is("ion@gmail.com")));
     }
+
+
 
 //    @Test
-//    void getEmployeeById() throws Exception {
-//        Mockito.when(employeeService.findEmployeeById(RECORD_1.getId()))
-//                .thenReturn(id);
+//    public void gotAllEmployees() throws Exception {
+//        given(employeeService.findAllEmployees())
+//                .willReturn(Arrays.asList(employee1));
+//
+//        mockMvc.perform(get("/employee/all")
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$", hasSize(1)))
+//                .andExpect(jsonPath("$[0].name", is(employee1.getName())));
+//
 //    }
 
-    @Test
-    void addEmployee() {
-    }
+//    @Test
+//    public void addSaveEmployee() throws Exception {
+//        given(employeeService.addEmployee(any(Employee.class))).willReturn(employee2);
+//    }
 
     @Test
     void updateEmployee() {

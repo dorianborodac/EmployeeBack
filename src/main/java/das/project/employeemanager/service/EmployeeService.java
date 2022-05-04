@@ -1,58 +1,19 @@
 package das.project.employeemanager.service;
 
-import das.project.employeemanager.exception.UserNotFoundException;
-import das.project.employeemanager.model.Employee;
-import das.project.employeemanager.repo.EmployeeRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import das.project.employeemanager.dto.EmployeeDTO;
+import org.springframework.http.HttpStatus;
 
-import javax.transaction.Transactional;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Service
-@Transactional
-public class EmployeeService {
-    private final EmployeeRepo employeeRepo;
+public interface EmployeeService {
+    List<EmployeeDTO> findAllEmployees();
 
-    @Autowired
-    public EmployeeService(EmployeeRepo employeeRepo) {
-        this.employeeRepo = employeeRepo;
-    }
+    EmployeeDTO updateEmployee(EmployeeDTO employeeDTO);
 
-    //take employee, and create employee in database
+    EmployeeDTO addEmployee(EmployeeDTO employeeDTO);
 
-    public Employee addEmployee(Employee employee) {
-        employee.setEmployeeCode(UUID.randomUUID().toString());
-        return employeeRepo.save(employee);
-    }
+    EmployeeDTO findEmployeeById(Long id);
 
-    //return list of employee
-    public List<Employee> findAllEmployees() {
-        return employeeRepo.findAll();
-    }
+    HttpStatus deleteEmployeeById(Long id);
 
-    //update the employees
-    public Employee updateEmployee(Employee employee) {
-        return employeeRepo.save(employee);
-    }
-
-    //find and employee by id (QUERY METHOD IN SPRING)
-    public Employee findEmployeeById(Long id) {
-        return employeeRepo.findEmployeeById(id)
-                .orElseThrow(() -> new UserNotFoundException("User by id " + id + " was not found"));
-    }
-
-    //delete and employee byId (QUERY METHOD)
-    public void deleteEmployee(Long id) {
-        employeeRepo.deleteEmployeeById(id);
-    }
-
-//    public List<Employee> gotAllEmplpoyee() {
-//        List<Employee> employees = new ArrayList<>();
-//        employeeRepo.findAll().forEach(employees::add);
-//        return employees;
-//    }
 }
